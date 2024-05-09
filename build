@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+# build the main file
+g++ main.cpp -o OUT -lGL -lGLU -lglut
+
+
+# run the new output
+./OUT
