@@ -104,8 +104,9 @@ void circle(int x, int y, int r)
 void drawString(const char* string)
 {
   glPushMatrix();
-  while (*string)
+  while (*string) {
     glutStrokeCharacter(GLUT_STROKE_ROMAN, *string++);
+  }
   glPopMatrix();
 }
 
@@ -126,7 +127,6 @@ void displayBackground()
     // After each triangle is drawn, the transformation state is restored to its original state for the next iteration.
   }
 }
-
 
 void displayHexagons()
 {
@@ -368,6 +368,7 @@ int main(int argc, char *argv[])
   glutReshapeFunc(reshape); // call the function window is resized.
   //
   // keyboard registration
+
   //
   glutKeyboardFunc(ASCIIKeyDown); // for exit
   glutSpecialFunc(SpecialKeyDown); // for move the game
