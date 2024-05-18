@@ -1,6 +1,5 @@
-#include <GL/glut.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <GL/freeglut.h>
+#include <cstdio>
 #include <math.h>
 #include <string.h>
 #include <time.h>
@@ -9,7 +8,7 @@
 const int  WINDOW_WIDTH = 800;
 const int  WINDOW_HEIGHT = 600;
 const int  TIMER_PERIOD = 25; 
-const double  SCALE_SPEED = 1.020; //the scale amount applied to the hexagons in every fame
+const float  SCALE_SPEED = 1.020; //the scale amount applied to the hexagons in every fame
 const float  HEXAGON_DELAY = 1250.0; //the amount of miliseconds passed between hexaons;
 const bool COLOR_CHANGE = true; //true for repeatedly color change, false for no color chnge;
 // ---- global constant -----
@@ -83,6 +82,7 @@ void initializeGlobals()
   background = { rand() % 100 / 300.0f, rand() % 100 / 300.0f ,rand() % 100 / 300.0f }; // random background rgb
 }
 
+
 //
 // to draw circle, center at (x,y)
 //  radius r
@@ -91,7 +91,6 @@ void circle(int x, int y, int r)
 {
   const float PI = 3.1415;
   float angle;
-
   glBegin(GL_POLYGON);
   for (int i = 0; i < 100; i++)
   {
@@ -101,6 +100,7 @@ void circle(int x, int y, int r)
   glEnd();
 }
 
+
 void drawString(const char* string)
 {
   glPushMatrix();
@@ -108,6 +108,7 @@ void drawString(const char* string)
     glutStrokeCharacter(GLUT_STROKE_ROMAN, *string++);
   glPopMatrix();
 }
+
 
 void displayBackground()
 {
@@ -125,6 +126,7 @@ void displayBackground()
     // After each triangle is drawn, the transformation state is restored to its original state for the next iteration.
   }
 }
+
 
 void displayHexagons()
 {
@@ -145,6 +147,7 @@ void displayHexagons()
   }
 }
 
+
 void displayPlayer()
 {
   glPushMatrix();
@@ -154,6 +157,7 @@ void displayPlayer()
   circle(0, 0, 5);
   glPopMatrix();
 }
+
 
 void displayUI()
 {
@@ -207,6 +211,7 @@ void displayUI()
 
 }
 
+
 //
 // To display onto window using OpenGL commands
 //
@@ -228,6 +233,7 @@ void display()
   glutSwapBuffers(); //making the back buffer (which now contains fully rendered scene) become the front buffer, and vice versa.
 }
 
+
 //
 // key function for ASCII charachters like ESC, a,b,c..,A,B,..Z
 //
@@ -236,6 +242,7 @@ void ASCIIKeyDown(unsigned char key, int x, int y)
   if (key == 27)
     exit(0);
 }
+
 
 //
 // Special Key like F1, F2, F3, Arrow Keys, Page UP, ...
@@ -263,6 +270,7 @@ void SpecialKeyDown(int key, int x, int y)
     game.pause = !game.pause;
 }
 
+
 //
 // This function is called when the window size changes.
 // w : is the new width of the window in pixels.
@@ -281,16 +289,17 @@ void reshape(int w, int h)
 
 }
 
+
 void onTimer(int v) 
 {
   glutTimerFunc(TIMER_PERIOD, onTimer, 0);
-  //initial animation of the game
+  // initial animation of the game
   if (game.animate)
   {
-    timerCount++;
+    timerCount++; // rotation and scale for first massage
     scale -= 0.1;
     rotation += 9;
-    if (scale <= 1)
+    if (scale <= 1)  // check for started the game
     {
       scale = 1;
       rotation = 0;
@@ -304,7 +313,7 @@ void onTimer(int v)
     rotation += rotateSpeed;
     for (int i = 0; i < 4; i++)
     {
-      if (fabs(hexagons[i].scale - 1.130) < 0.01) {
+      if (fabs(hexagons[i].scale - 1.130) < 0.01) { // check collision 
         if (input != hexagons[i].missingPart) {
           {
             game.isStarted = false;
@@ -313,8 +322,7 @@ void onTimer(int v)
             }
           }
         }
-        else { score.current++;
-        }
+        else { score.current++; }
       }
       hexagons[i].scale *= SCALE_SPEED;
       if (hexagons[i].scale >= maxScale)
@@ -333,8 +341,8 @@ void onTimer(int v)
     }
     else if (timerCount % 50 == 0)
     {
-      int rnd = rand() % 60 - 30;
-      if (rnd == 0)
+      int rnd = rand() % 60 - 30; // genrate random number  30 - 0
+      if (rnd >= 10)
         rnd = 180;
       rotation += rnd;
       timerCount = 0;
@@ -343,12 +351,14 @@ void onTimer(int v)
   glutPostRedisplay();
 }
 
+
+
 int main(int argc, char *argv[])
 {
   initializeGlobals();
   srand(time(NULL)); // make sure every time you run the program take a new rendom value
   glutInit(&argc, argv); // utilize the GLUT
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE); // set the display mode RGB and enable double buffering
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE); // set the display mode RGB and enable float buffering
   glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT); // set width, height for window
   glutCreateWindow("hexagon game");
   //
@@ -365,8 +375,9 @@ int main(int argc, char *argv[])
   glEnable(GL_BLEND); //enables blending
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // set the src and destination for color in framebuffer
 
-  glutTimerFunc(TIMER_PERIOD, onTimer, 0); // animation updates and inital the values
+  glutTimerFunc(TIMER_PERIOD, onTimer, 0); // animation updates and inital the values every 25
 
   glutMainLoop();
 }
+
 
