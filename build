@@ -1,6 +1,9 @@
 #!/usr/bin/bash
 
 # build the main file
+
+# gcc c.c -o OUT -lGL -lGLU -lglut
+
 g++ main.cpp -o OUT -lGL -lGLU -lglut
 
 

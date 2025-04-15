@@ -1,6 +1,6 @@
 #include <GL/freeglut.h>
-#include <cstdio>
 #include <math.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
